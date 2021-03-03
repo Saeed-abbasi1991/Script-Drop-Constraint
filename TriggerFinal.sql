@@ -1,4 +1,11 @@
 
+
+
+
+
+
+
+
 IF object_id(N'STO.Trg_ImportHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportHeader
 SET ANSI_NULLS ON
 GO
