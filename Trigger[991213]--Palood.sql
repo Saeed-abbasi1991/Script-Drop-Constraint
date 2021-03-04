@@ -24,7 +24,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ImportHeader
+				BEGIN TRY
+						INSERT INTO sadganBase.STO.ImportHeader
 							([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -99,11 +100,15 @@ BEGIN
 						  ,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
-				INSERT INTO sadganBase.STO.ImportHeader
+			     BEGIN TRY
+					INSERT INTO sadganBase.STO.ImportHeader
 							([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -178,6 +183,9 @@ BEGIN
 							,@ClientAddress
 		               FROM
 			DELETED i
+			     END TRY
+				 BEGIN CATCH
+				END CATCH
 		    END
 END
 SET ANSI_NULLS ON
@@ -209,7 +217,8 @@ BEGIN
 
 		if @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailItem
+				BEGIN TRY
+						INSERT INTO sadganBase.STO.ImportDetailItem
 						([ID]
 						,[RefImportHeaderID]
 						,[RowNo]
@@ -281,11 +290,16 @@ BEGIN
 						,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+				Print'Trg_ImportDetailItem ERROR'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailItem
+				BEGIN TRY
+							INSERT INTO sadganBase.STO.ImportDetailItem
 					([ID]
 					,[RefImportHeaderID]
 					,[RowNo]
@@ -357,6 +371,10 @@ BEGIN
 					,@ClientAddress
 		  FROM
 			  deleted i
+			    END TRY
+				BEGIN CATCH
+				Print'Trg_ImportDetailItem ERROR'
+				END CATCH
 			END
     
 END
@@ -390,7 +408,8 @@ BEGIN
 
 		if @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportHeader
+				BEGIN TRY
+						INSERT INTO sadganBase.STO.ReturnImportHeader
 							([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -462,11 +481,16 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+						Print'Trg_ReturnImportHeader ERROR'
+				END CATCH
 			END
 
 		ELSE
 		BEGIN
-			INSERT INTO sadganBase.STO.ReturnImportHeader
+			BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnImportHeader
 						([ID]
 						,[RefVoucherTypeID]
 						,[RefFiscalYearID]
@@ -538,6 +562,10 @@ BEGIN
 						,@ClientAddress
 					FROM
 						deleted i
+			END TRY
+			BEGIN CATCH
+					Print'Trg_ReturnImportHeader ERROR'
+			END CATCH
 		END
     
 END
@@ -572,85 +600,91 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportDetailItem
-							 ([ID]
-							,[RefReturnImportHeaderID]
-							,[RowNo]
-							,[RefImportDetailItemID]
-							,[RefGoodsID]
-							,[RefBaseUnitID]
-							,[BaseAmount]
-							,[RefLateralUnitID]
-							,[LateralAmount]
-							,[MainUnit]
-							,[Amount]
-							,[Rate]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TransportPrice]
-							,[TransportTaxPrice]
-							,[TransportChargePrice]
-							,[NetPrice]
-							,[Comment]
-							,[OrderValue]
-							,[RemainRate]
-							,[RemainPrice]
-							,[RemainAmount]
-							,[RefPricingHeaderID]
-							,[AvgRate]
-							,[AvgPrice]
-							,[NetAvgPrice]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action]
-							,[Log_HostName]
-							,[Log_nt_domain]
-							,[Log_nt_username]
-							,[Log_ClientAddress])
-					SELECT
-							 [ID]
-							,[RefReturnImportHeaderID]
-							,[RowNo]
-							,[RefImportDetailItemID]
-							,[RefGoodsID]
-							,[RefBaseUnitID]
-							,[BaseAmount]
-							,[RefLateralUnitID]
-							,[LateralAmount]
-							,[MainUnit]
-							,[Amount]
-							,[Rate]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TransportPrice]
-							,[TransportTaxPrice]
-							,[TransportChargePrice]
-							,[NetPrice]
-							,[Comment]
-							,[OrderValue]
-							,[RemainRate]
-							,[RemainPrice]
-							,[RemainAmount]
-							,[RefPricingHeaderID]
-							,[AvgRate]
-							,[AvgPrice]
-							,[NetAvgPrice]
-							,getdate()
-							,@User_LoginId
-							,@Act
-							,@HostName
-							,@Nt_Domain
-							,@Nt_UserName
-							,@ClientAddress
-						FROM
-							INSERTED i
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnImportDetailItem
+								 ([ID]
+								,[RefReturnImportHeaderID]
+								,[RowNo]
+								,[RefImportDetailItemID]
+								,[RefGoodsID]
+								,[RefBaseUnitID]
+								,[BaseAmount]
+								,[RefLateralUnitID]
+								,[LateralAmount]
+								,[MainUnit]
+								,[Amount]
+								,[Rate]
+								,[Price]
+								,[TaxPrice]
+								,[ChargePrice]
+								,[TransportPrice]
+								,[TransportTaxPrice]
+								,[TransportChargePrice]
+								,[NetPrice]
+								,[Comment]
+								,[OrderValue]
+								,[RemainRate]
+								,[RemainPrice]
+								,[RemainAmount]
+								,[RefPricingHeaderID]
+								,[AvgRate]
+								,[AvgPrice]
+								,[NetAvgPrice]
+								,[LogDate]
+								,[User_LoginId]
+								,[Log_Action]
+								,[Log_HostName]
+								,[Log_nt_domain]
+								,[Log_nt_username]
+								,[Log_ClientAddress])
+						SELECT
+								 [ID]
+								,[RefReturnImportHeaderID]
+								,[RowNo]
+								,[RefImportDetailItemID]
+								,[RefGoodsID]
+								,[RefBaseUnitID]
+								,[BaseAmount]
+								,[RefLateralUnitID]
+								,[LateralAmount]
+								,[MainUnit]
+								,[Amount]
+								,[Rate]
+								,[Price]
+								,[TaxPrice]
+								,[ChargePrice]
+								,[TransportPrice]
+								,[TransportTaxPrice]
+								,[TransportChargePrice]
+								,[NetPrice]
+								,[Comment]
+								,[OrderValue]
+								,[RemainRate]
+								,[RemainPrice]
+								,[RemainAmount]
+								,[RefPricingHeaderID]
+								,[AvgRate]
+								,[AvgPrice]
+								,[NetAvgPrice]
+								,getdate()
+								,@User_LoginId
+								,@Act
+								,@HostName
+								,@Nt_Domain
+								,@Nt_UserName
+								,@ClientAddress
+							FROM
+								INSERTED i
+				END TRY
+				BEGIN CATCH
+					Print'Trg_ReturnImportDetailItem ERROR'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
-				 INSERT INTO sadganBase.STO.ReturnImportDetailItem
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnImportDetailItem
 							 ([ID]
 							,[RefReturnImportHeaderID]
 							,[RowNo]
@@ -724,6 +758,10 @@ BEGIN
 							  ,@ClientAddress
 							FROM
 								deleted i
+				END TRY
+				BEGIN CATCH
+					Print'Trg_ReturnImportDetailItem ERROR'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -757,7 +795,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ExportHeader
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ExportHeader
 						    ([ID]
 							,[RefFiscalYearID]
 							,[RefVoucherTypeID]
@@ -815,10 +854,15 @@ BEGIN
 						  ,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					Print'Trg_ExportHeader ERROR'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				 INSERT INTO sadganBase.STO.ExportHeader
 							 ([ID]
 							,[RefFiscalYearID]
@@ -877,6 +921,10 @@ BEGIN
 							,@ClientAddress
 							FROM
 								deleted i
+				END TRY
+				BEGIN CATCH
+					Print'Trg_ExportHeader ERROR'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -909,7 +957,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ExportDetailItem
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ExportDetailItem
 						    ([ID]
 							,[RefExportHeaderID]
 							,[RowNo]
@@ -977,10 +1026,15 @@ BEGIN
 						  ,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					Print'Trg_ExportDetailItem ERROR'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				 INSERT INTO sadganBase.STO.ExportDetailItem
 							 ([ID]
 							,[RefExportHeaderID]
@@ -1049,8 +1103,12 @@ BEGIN
 							,@ClientAddress
 					FROM
 						deleted i
+			    END TRY
+				BEGIN CATCH
+					Print'Trg_ExportDetailItem ERROR'
+				END CATCH
 			END
-END
+		END
 SET ANSI_NULLS ON
 GO
 -----------------------------------------------------------
