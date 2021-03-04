@@ -210,113 +210,7 @@ BEGIN
 END
 SET ANSI_NULLS ON
 GO
------------------------------------------------------------
-
-IF object_id(N'STO.Trg_ImportDetailIncrementalFactor', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportDetailIncrementalFactor
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TRIGGER [STO].[Trg_ImportDetailIncrementalFactor] ON [sadganPaloodDev].[STO].[ImportDetailIncrementalFactor]AFTER INSERT, DELETE,UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-	DECLARE @User_LoginId ndtid
-	
-	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin WHERE SessionId=@@SPID ORDER BY ServerTime DESC)
-
-	DECLARE @Act INT = 0/*insert*/
-	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
-		SET @Act=1/*update*/
-	ELSE if EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
-
-		IF @Act=0 or @Act=1
-			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailIncrementalFactor(
-							 [ID]
-							,[RefImportHeaderID]
-							,[RefCategoryID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[RefBaseOfSharingID]
-							,[Comment]
-							,[RowNo]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action]
-							)
-					SELECT
-						   [ID]
-						  ,[RefImportHeaderID]
-						  ,[RefCategoryID]
-						  ,[RefLedgerAccountID]
-						  ,[RefDetailAccountID]
-						  ,[RefDetailAccount2ID]
-						  ,[RefDetailAccount3ID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[RefBaseOfSharingID]
-						  ,[Comment]
-						  ,[RowNo]
-						  ,getdate()
-						  ,@User_LoginId
-						  ,@Act
-					FROM
-							INSERTED i
-			END
-
-		ELSE
-			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailIncrementalFactor
-							([ID]
-							,[RefImportHeaderID]
-							,[RefCategoryID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[RefBaseOfSharingID]
-							,[Comment]
-							,[RowNo]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-			          SELECT
-							 [ID]
-							,[RefImportHeaderID]
-							,[RefCategoryID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[RefBaseOfSharingID]
-							,[Comment]
-							,[RowNo]
-							,getdate()
-							,@User_LoginId
-							,@Act
-			     FROM
-					 DELETED i
-			END
-END
-SET ANSI_NULLS ON
-GO
------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------------------------------
 IF object_id(N'STO.Trg_ImportDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportDetailItem
 SET ANSI_NULLS ON
 GO
@@ -548,101 +442,14 @@ BEGIN
 END
 SET ANSI_NULLS ON
 GO
------------------------------------------------------------
-
-IF object_id(N'STO.Trg_ImportDetailOppositLedger', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportDetailOppositLedger
+--------------------------------------------------------------------------------------------------------------------------------
+IF object_id(N'STO.Trg_ReturnImportHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnImportHeader
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TRIGGER [STO].[Trg_ImportDetailOppositLedger]
-ON [sadganPaloodDev].[STO].[ImportDetailOppositLedger]
-AFTER INSERT, DELETE,UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-	DECLARE @User_LoginId ndtid
-	
-	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin WHERE SessionId=@@SPID ORDER BY ServerTime DESC)
-
-	DECLARE @Act INT = 0/*insert*/
-	if EXISTS(SELECT id FROM deleted WHERE id in (SELECT id FROM INSERTED))
-		SET @Act=1/*update*/
-	ELSE IF EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
-
-		IF @Act=0 or @Act=1
-		BEGIN
-			INSERT INTO sadganBase.STO.ImportDetailOppositLedger
-					   ([ID]
-					   ,[RefImportHeaderID]
-					   ,[RefLedgerAccountID]
-					   ,[RefDetailAccountID]
-					   ,[RefDetailAccount2ID]
-					   ,[RefDetailAccount3ID]
-					   ,[Percentage]
-					   ,[Price]
-					   ,[LogDate]
-					   ,[User_LoginId]
-					   ,[Log_Action])
-			      SELECT
-						 [ID]
-					    ,[RefImportHeaderID]
-						,[RefLedgerAccountID]
-						,[RefDetailAccountID]
-						,[RefDetailAccount2ID]
-						,[RefDetailAccount3ID]
-						,[Percentage]
-						,[Price]
-						,getdate()
-						,@User_LoginId
-						,@Act
-				  FROM
-					  INSERTED i
-		END
-
-		ELSE
-		    BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailOppositLedger
-							([ID]
-							,[RefImportHeaderID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Percentage]
-							,[Price]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-                      SELECT
-							 [ID]
-							,[RefImportHeaderID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Percentage]
-							,[Price]
-							,getdate()
-							,@User_LoginId
-							,@Act
-				      FROM
-                          deleted i
-	        END
-        END
-SET ANSI_NULLS ON
-GO
-------------------------------------------------------------
-
-IF object_id(N'STO.Trg_ImportDetailPaymentMethod', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportDetailPaymentMethod
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TRIGGER [STO].[Trg_ImportDetailPaymentMethod]
-ON [sadganPaloodDev].[STO].[ImportDetailPaymentMethod]
+CREATE TRIGGER [STO].[Trg_ReturnImportHeader]
+ON [sadganPaloodDev].[STO].[ReturnImportHeader]
 AFTER INSERT, DELETE,UPDATE
 AS
 BEGIN
@@ -654,162 +461,178 @@ BEGIN
 
 	DECLARE @Act int = 0/*insert*/
 	if EXISTS(SELECT id FROM deleted where id in (SELECT id FROM INSERTED))
-		SET @Act=1/*update*/
+		set @Act=1/*update*/
 	ELSE if EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
+		set @Act=2/*delete*/
 
-		IF @Act=0 or @Act=1
-		BEGIN
-			INSERT INTO sadganBase.STO.ImportDetailPaymentMethod
-						([ID]
-						,[RefImportHeaderID]
-						,[RowNo]
-						,[RefPaymentTypeID]
-						,[PaymentDate]
-						,[PaymentPrice]
-						,[IsPaid]
-						,[LogDate]
-						,[User_LoginId]
-						,[Log_Action])
-				  SELECT
-						 [ID]
-						,[RefImportHeaderID]
-						,[RowNo]
-						,[RefPaymentTypeID]
-						,[PaymentDate]
-						,[PaymentPrice]
-						,[IsPaid]
-						,getdate()
-						,@User_LoginId
-						,@Act
-				 FROM
-                     INSERTED i
-		END
-		
-		ELSE
+		if @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailPaymentMethod
-						  ([ID]
-						  ,[RefImportHeaderID]
-						  ,[RowNo]
-						  ,[RefPaymentTypeID]
-						  ,[PaymentDate]
-						  ,[PaymentPrice]
-						  ,[IsPaid]
-						  ,[LogDate]
-						  ,[User_LoginId]
-						  ,[Log_Action])
+				INSERT INTO sadganBase.STO.ReturnImportHeader
+							([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefVoucherHeaderID]
+							,[ReturnImportNo]
+							,[ReturnImportDate]
+							,[RefKindID]
+							,[RefWarehouseID]
+							,[RefDetailAccountID]
+							,[ByRefrence]
+							,[Comment]
+							,[_TotalPrice]
+							,[_TotalTaxPrice]
+							,[_TotalChargePrice]
+							,[_TotalTransportPrice]
+							,[_TotalTransportTaxPrice]
+							,[_TotalTransportChargePrice]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalAvgPrice]
+							,[_TotalNetAvgPrice]
+							,[TaxPrice]
+							,[ChargePrice]
+							,[TotalPrice]
+							,[AvgPrice]
+							,[TotalAvgPrice]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
 					SELECT
-						   [ID]
-						  ,[RefImportHeaderID]
-						  ,[RowNo]
-						  ,[RefPaymentTypeID]
-						  ,[PaymentDate]
-						  ,[PaymentPrice]
-						  ,[IsPaid]
-						  ,getdate()
-						  ,@User_LoginId
-						  ,@Act
-					  FROM
-						deleted i
-			END
-	    END
-SET ANSI_NULLS ON
-GO
-------------------------------------------------------------
-
-
-IF object_id(N'STO.Trg_ImportDetailTransport', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ImportDetailTransport
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TRIGGER [STO].[Trg_ImportDetailTransport]
-ON [sadganPaloodDev].[STO].[ImportDetailTransport]
-AFTER INSERT, DELETE,UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-	DECLARE @User_LoginId ndtid
-	
-	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
-
-	DECLARE @Act int = 0/*insert*/
-	if EXISTS(SELECT id FROM deleted WHERE id in (SELECT id FROM INSERTED))
-		SET @Act=1/*update*/
-	ELSE IF EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
-
-		IF @Act=0 or @Act=1
-			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailTransport
-						   ([ID]
-						  ,[RefImportHeaderID]
-						  ,[RefDetailAccountID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[SharingBasis]
-						  ,[Deliverer]
-						  ,[Comment]
-						  ,[LogDate]
-						  ,[User_LoginId]
-						  ,[Log_Action])
-					SELECT
-						   [ID]
-						  ,[RefImportHeaderID]
-						  ,[RefDetailAccountID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[SharingBasis]
-						  ,[Deliverer]
-						  ,[Comment]
-						  ,getdate()
-						  ,@User_LoginId
-						  ,@Act
+							 [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefVoucherHeaderID]
+							,[ReturnImportNo]
+							,[ReturnImportDate]
+							,[RefKindID]
+							,[RefWarehouseID]
+							,[RefDetailAccountID]
+							,[ByRefrence]
+							,[Comment]
+							,[_TotalPrice]
+							,[_TotalTaxPrice]
+							,[_TotalChargePrice]
+							,[_TotalTransportPrice]
+							,[_TotalTransportTaxPrice]
+							,[_TotalTransportChargePrice]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalAvgPrice]
+							,[_TotalNetAvgPrice]
+							,[TaxPrice]
+							,[ChargePrice]
+							,[TotalPrice]
+							,[AvgPrice]
+							,[TotalAvgPrice]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
 					FROM
 						INSERTED i
 			END
 
 		ELSE
-			BEGIN
-				INSERT INTO sadganBase.STO.ImportDetailTransport(
-						   [ID]
-						  ,[RefImportHeaderID]
-						  ,[RefDetailAccountID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[SharingBasis]
-						  ,[Deliverer]
-						  ,[Comment]
-						  ,[LogDate]
-						  ,[User_LoginId]
-						  ,[Log_Action])
+		BEGIN
+			INSERT INTO sadganBase.STO.ReturnImportHeader
+						([ID]
+						,[RefVoucherTypeID]
+						,[RefFiscalYearID]
+						,[RefVoucherHeaderID]
+						,[ReturnImportNo]
+						,[ReturnImportDate]
+						,[RefKindID]
+						,[RefWarehouseID]
+						,[RefDetailAccountID]
+						,[ByRefrence]
+						,[Comment]
+						,[_TotalPrice]
+						,[_TotalTaxPrice]
+						,[_TotalChargePrice]
+						,[_TotalTransportPrice]
+						,[_TotalTransportTaxPrice]
+						,[_TotalTransportChargePrice]
+						,[_TotalNetPrice]
+						,[RefStatusID]
+						,[RefWriterID]
+						,[CreateDate]
+						,[RefEditorID]
+						,[UpdateDate]
+						,[RefAmountConfirmStatusID]
+						,[AmountConfirmStatusUpdateDate]
+						,[_TotalAvgPrice]
+						,[_TotalNetAvgPrice]
+						,[TaxPrice]
+						,[ChargePrice]
+						,[TotalPrice]
+						,[AvgPrice]
+						,[TotalAvgPrice]
+						,[Price]
+						,[__Updated315__]
+						,[LogDate]
+						,[User_LoginId]
+						,[Log_Action])
 					SELECT
-						   [ID]
-						  ,[RefImportHeaderID]
-						  ,[RefDetailAccountID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[SharingBasis]
-						  ,[Deliverer]
-						  ,[Comment]
-						  ,getdate()
-						  ,@User_LoginId
-						  ,@Act
+						 [ID]
+						,[RefVoucherTypeID]
+						,[RefFiscalYearID]
+						,[RefVoucherHeaderID]
+						,[ReturnImportNo]
+						,[ReturnImportDate]
+						,[RefKindID]
+						,[RefWarehouseID]
+						,[RefDetailAccountID]
+						,[ByRefrence]
+						,[Comment]
+						,[_TotalPrice]
+						,[_TotalTaxPrice]
+						,[_TotalChargePrice]
+						,[_TotalTransportPrice]
+						,[_TotalTransportTaxPrice]
+						,[_TotalTransportChargePrice]
+						,[_TotalNetPrice]
+						,[RefStatusID]
+						,[RefWriterID]
+						,[CreateDate]
+						,[RefEditorID]
+						,[UpdateDate]
+						,[RefAmountConfirmStatusID]
+						,[AmountConfirmStatusUpdateDate]
+						,[_TotalAvgPrice]
+						,[_TotalNetAvgPrice]
+						,[TaxPrice]
+						,[ChargePrice]
+						,[TotalPrice]
+						,[AvgPrice]
+						,[TotalAvgPrice]
+						,[Price]
+						,[__Updated315__]
+						,getdate()
+						,@User_LoginId
+						,@Act
 					FROM
 						deleted i
-			END
+		END
     
 END
 SET ANSI_NULLS ON
 GO
-------------------------------------------------------------
-
+--------------------------------------------------------------------------------------------------------------------------------
 
 IF object_id(N'STO.Trg_ReturnImportDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnImportDetailItem
 SET ANSI_NULLS ON
@@ -1032,100 +855,13 @@ END
 SET ANSI_NULLS ON
 GO
 -----------------------------------------------------------
-
-IF object_id(N'STO.Trg_ReturnImportDetailOppositLedger', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnImportDetailOppositLedger
+IF object_id(N'STO.Trg_ExportHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ExportHeader
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TRIGGER [STO].[Trg_ReturnImportDetailOppositLedger]
-ON [sadganPaloodDev].[STO].[ReturnImportDetailOppositLedger]
-AFTER INSERT, DELETE,UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-	DECLARE @User_LoginId ndtid
-	
-	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
-
-	DECLARE @Act INT = 0/*insert*/
-	IF EXISTS(SELECT id FROM deleted WHERE id in (SELECT id FROM INSERTED))
-		set @Act=1/*update*/
-	ELSE IF EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
-
-		IF @Act=0 or @Act=1
-			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportDetailOppositLedger
-						   ([ID]
-						  ,[RefReturnImportHeaderID]
-						  ,[RefLedgerAccountID]
-						  ,[RefDetailAccountID]
-						  ,[RefDetailAccount2ID]
-						  ,[RefDetailAccount3ID]
-						  ,[Percentage]
-						  ,[Price]
-						  ,[LogDate]
-						  ,[User_LoginId]
-						  ,[Log_Action])
-					SELECT
-						   [ID]
-						  ,[RefReturnImportHeaderID]
-						  ,[RefLedgerAccountID]
-						  ,[RefDetailAccountID]
-						  ,[RefDetailAccount2ID]
-						  ,[RefDetailAccount3ID]
-						  ,[Percentage]
-						  ,[Price]
-						  ,getdate()
-						  ,@User_LoginId
-						  ,@Act
-					FROM
-						INSERTED i
-			END
-
-		ELSE
-			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportDetailOppositLedger
-							 ([ID]
-							,[RefReturnImportHeaderID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Percentage]
-							,[Price]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-				     SELECT
-							 [ID]
-							,[RefReturnImportHeaderID]
-							,[RefLedgerAccountID]
-							,[RefDetailAccountID]
-							,[RefDetailAccount2ID]
-							,[RefDetailAccount3ID]
-							,[Percentage]
-							,[Price]
-							,getdate()
-							,@User_LoginId
-							,@Act
-				       FROM
-					       deleted i
-			END
-    
-END
-SET ANSI_NULLS ON
-GO
------------------------------------------------------------
-IF object_id(N'STO.Trg_ReturnImportDetailTransport', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnImportDetailTransport
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TRIGGER [STO].[Trg_ReturnImportDetailTransport]
-ON [sadganPaloodDev].[STO].[ReturnImportDetailTransport]
+CREATE TRIGGER [STO].[Trg_ExportHeader]
+ON [sadganPaloodDev].[STO].[ExportHeader]
 AFTER INSERT, DELETE,UPDATE
 AS
 BEGIN
@@ -1136,82 +872,137 @@ BEGIN
 	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
 
 	DECLARE @Act int = 0/*insert*/
-	IF EXISTS(SELECT id FROM deleted WHERE id in (SELECT id FROM INSERTED))
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
 		SET @Act=1/*update*/
 	ELSE IF EXISTS(SELECT 1 FROM deleted)
 		SET @Act=2/*delete*/
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportDetailTransport
-							([RefDetailAccountID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[SharingBasis]
-							,[Deliverer]
+				INSERT INTO sadganBase.STO.ExportHeader
+						    ([ID]
+							,[RefFiscalYearID]
+							,[RefVoucherTypeID]
+							,[RefVoucherHeaderID]
+							,[ExportNo]
+							,[ExportDate]
+							,[RefKindID]
+							,[RefWarehouseID]
+							,[RefDetailAccountID]
+							,[ByRefrence]
+							,[RefBaseVoucherTypeID]
 							,[Comment]
-							,[ID]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[Price]
+							,[__Updated315__]
 							,[LogDate]
 							,[User_LoginId]
 							,[Log_Action])
 					SELECT
-						   [RefDetailAccountID]
-						  ,[Price]
-						  ,[TaxPrice]
-						  ,[ChargePrice]
-						  ,[SharingBasis]
-						  ,[Deliverer]
+						   [ID]
+						  ,[RefFiscalYearID]
+						  ,[RefVoucherTypeID]
+						  ,[RefVoucherHeaderID]
+						  ,[ExportNo]
+						  ,[ExportDate]
+						  ,[RefKindID]
+						  ,[RefWarehouseID]
+						  ,[RefDetailAccountID]
+						  ,[ByRefrence]
+						  ,[RefBaseVoucherTypeID]
 						  ,[Comment]
-						  ,[ID]
+						  ,[_TotalNetPrice]
+						  ,[RefStatusID]
+						  ,[RefWriterID]
+						  ,[CreateDate]
+						  ,[RefEditorID]
+						  ,[UpdateDate]
+						  ,[RefAmountConfirmStatusID]
+						  ,[AmountConfirmStatusUpdateDate]
+						  ,[Price]
+						  ,[__Updated315__]
 						  ,getdate()
 						  ,@User_LoginId
 						  ,@Act
-					FROM
+						FROM
 							INSERTED i
 			END
 
 		ELSE
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportDetailTransport
-							([RefDetailAccountID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[SharingBasis]
-							,[Deliverer]
-							,[Comment]
-							,[ID]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-					  SELECT
-							 [RefDetailAccountID]
-							,[Price]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[SharingBasis]
-							,[Deliverer]
-							,[Comment]
-							,[ID]
-							,getdate()
-							,@User_LoginId
-							,@Act
-					  FROM
-						  deleted i
+				 INSERT INTO sadganBase.STO.ExportHeader
+							   ([ID]
+							  ,[RefFiscalYearID]
+							  ,[RefVoucherTypeID]
+							  ,[RefVoucherHeaderID]
+							  ,[ExportNo]
+							  ,[ExportDate]
+							  ,[RefKindID]
+							  ,[RefWarehouseID]
+							  ,[RefDetailAccountID]
+							  ,[ByRefrence]
+							  ,[RefBaseVoucherTypeID]
+							  ,[Comment]
+							  ,[_TotalNetPrice]
+							  ,[RefStatusID]
+							  ,[RefWriterID]
+							  ,[CreateDate]
+							  ,[RefEditorID]
+							  ,[UpdateDate]
+							  ,[RefAmountConfirmStatusID]
+							  ,[AmountConfirmStatusUpdateDate]
+							  ,[Price]
+							  ,[__Updated315__]
+							  ,[LogDate]
+							  ,[User_LoginId]
+							  ,[Log_Action])
+						SELECT
+							   [ID]
+							  ,[RefFiscalYearID]
+							  ,[RefVoucherTypeID]
+							  ,[RefVoucherHeaderID]
+							  ,[ExportNo]
+							  ,[ExportDate]
+							  ,[RefKindID]
+							  ,[RefWarehouseID]
+							  ,[RefDetailAccountID]
+							  ,[ByRefrence]
+							  ,[RefBaseVoucherTypeID]
+							  ,[Comment]
+							  ,[_TotalNetPrice]
+							  ,[RefStatusID]
+							  ,[RefWriterID]
+							  ,[CreateDate]
+							  ,[RefEditorID]
+							  ,[UpdateDate]
+							  ,[RefAmountConfirmStatusID]
+							  ,[AmountConfirmStatusUpdateDate]
+							  ,[Price]
+							  ,[__Updated315__]
+							  ,getdate()
+							  ,@User_LoginId
+							  ,@Act
+							FROM
+								deleted i
 			END
-    
 END
 SET ANSI_NULLS ON
 GO
 -----------------------------------------------------------
-IF object_id(N'STO.ReturnImportHeader', N'TR') IS NOT NULL DROP TRIGGER STO.ReturnImportHeader
+IF object_id(N'STO.Trg_ExportDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ExportDetailItem
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TRIGGER [STO].[Trg_ReturnImportHeader]
-ON [sadganPaloodDev].[STO].[ReturnImportHeader]
+CREATE TRIGGER [STO].[Trg_ExportDetailItem]
+ON [sadganPaloodDev].[STO].[ExportDetailItem]
 AFTER INSERT, DELETE,UPDATE
 AS
 BEGIN
@@ -1222,31 +1013,211 @@ BEGIN
 	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
 
 	DECLARE @Act int = 0/*insert*/
-	if EXISTS(SELECT id FROM deleted where id in (SELECT id FROM INSERTED))
-		set @Act=1/*update*/
-	ELSE if EXISTS(SELECT 1 FROM deleted)
-		set @Act=2/*delete*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
 
-		if @Act=0 or @Act=1
+		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnImportHeader
-							([ID]
-							,[RefVoucherTypeID]
+				INSERT INTO sadganBase.STO.ExportDetailItem
+						    ([ID]
+							,[RefExportHeaderID]
+							,[RowNo]
+							,[RefPreFactorDetailID]
+							,[RefFactorDetailID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[RefLedgerAccountID]
+							,[RefDetailAccountID]
+							,[RefDetailAccount2ID]
+							,[RefDetailAccount3ID]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[RefGoodsFormulaproductionID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+						   [ID]
+						  ,[RefExportHeaderID]
+						  ,[RowNo]
+						  ,[RefPreFactorDetailID]
+						  ,[RefFactorDetailID]
+						  ,[RefGoodsID]
+						  ,[RefBaseUnitID]
+						  ,[BaseAmount]
+						  ,[RefLateralUnitID]
+						  ,[LateralAmount]
+						  ,[_MainUnit]
+						  ,[_Amount]
+						  ,[_Rate]
+						  ,[_NetPrice]
+						  ,[RefLedgerAccountID]
+						  ,[RefDetailAccountID]
+						  ,[RefDetailAccount2ID]
+						  ,[RefDetailAccount3ID]
+						  ,[Comment]
+						  ,[OrderValue]
+						  ,[RemainRate]
+						  ,[RemainPrice]
+						  ,[RemainAmount]
+						  ,[RefPricingHeaderID]
+						  ,[RefGoodsFormulaproductionID]
+						  ,[_RefBaseUnitID]
+						  ,[_BaseAmount]
+						  ,[_RefLateralUnitID]
+						  ,[_LateralAmount]
+						  ,[BaseRate]
+						  ,[LateralRate]
+						  ,[Price]
+						  ,[__Updated315__]
+						  ,getdate()
+						  ,@User_LoginId
+						  ,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.ExportDetailItem
+							   ([ID]
+							  ,[RefExportHeaderID]
+							  ,[RowNo]
+							  ,[RefPreFactorDetailID]
+							  ,[RefFactorDetailID]
+							  ,[RefGoodsID]
+							  ,[RefBaseUnitID]
+							  ,[BaseAmount]
+							  ,[RefLateralUnitID]
+							  ,[LateralAmount]
+							  ,[_MainUnit]
+							  ,[_Amount]
+							  ,[_Rate]
+							  ,[_NetPrice]
+							  ,[RefLedgerAccountID]
+							  ,[RefDetailAccountID]
+							  ,[RefDetailAccount2ID]
+							  ,[RefDetailAccount3ID]
+							  ,[Comment]
+							  ,[OrderValue]
+							  ,[RemainRate]
+							  ,[RemainPrice]
+							  ,[RemainAmount]
+							  ,[RefPricingHeaderID]
+							  ,[RefGoodsFormulaproductionID]
+							  ,[_RefBaseUnitID]
+							  ,[_BaseAmount]
+							  ,[_RefLateralUnitID]
+							  ,[_LateralAmount]
+							  ,[BaseRate]
+							  ,[LateralRate]
+							  ,[Price]
+							  ,[__Updated315__]
+							  ,[LogDate]
+							  ,[User_LoginId]
+							  ,[Log_Action])
+						SELECT
+								 [ID]
+								,[RefExportHeaderID]
+								,[RowNo]
+								,[RefPreFactorDetailID]
+								,[RefFactorDetailID]
+								,[RefGoodsID]
+								,[RefBaseUnitID]
+								,[BaseAmount]
+								,[RefLateralUnitID]
+								,[LateralAmount]
+								,[_MainUnit]
+								,[_Amount]
+								,[_Rate]
+								,[_NetPrice]
+								,[RefLedgerAccountID]
+								,[RefDetailAccountID]
+								,[RefDetailAccount2ID]
+								,[RefDetailAccount3ID]
+								,[Comment]
+								,[OrderValue]
+								,[RemainRate]
+								,[RemainPrice]
+								,[RemainAmount]
+								,[RefPricingHeaderID]
+								,[RefGoodsFormulaproductionID]
+								,[_RefBaseUnitID]
+								,[_BaseAmount]
+								,[_RefLateralUnitID]
+								,[_LateralAmount]
+								,[BaseRate]
+								,[LateralRate]
+								,[Price]
+								,[__Updated315__]  
+								,getdate()
+								,@User_LoginId
+								,@Act
+							FROM
+								deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+IF object_id(N'STO.Trg_ReturnExportHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnExportHeader
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_ReturnExportHeader]
+ON [sadganPaloodDev].[STO].[ReturnExportHeader]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.ReturnExportHeader
+						    ([ID]
 							,[RefFiscalYearID]
+							,[RefVoucherTypeID]
 							,[RefVoucherHeaderID]
-							,[ReturnImportNo]
-							,[ReturnImportDate]
+							,[ReturnExportNo]
+							,[ReturnExportDate]
 							,[RefKindID]
 							,[RefWarehouseID]
 							,[RefDetailAccountID]
 							,[ByRefrence]
+							,[RefBaseVoucherTypeID]
 							,[Comment]
-							,[_TotalPrice]
-							,[_TotalTaxPrice]
-							,[_TotalChargePrice]
-							,[_TotalTransportPrice]
-							,[_TotalTransportTaxPrice]
-							,[_TotalTransportChargePrice]
 							,[_TotalNetPrice]
 							,[RefStatusID]
 							,[RefWriterID]
@@ -1255,13 +1226,618 @@ BEGIN
 							,[UpdateDate]
 							,[RefAmountConfirmStatusID]
 							,[AmountConfirmStatusUpdateDate]
-							,[_TotalAvgPrice]
-							,[_TotalNetAvgPrice]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[AvgPrice]
-							,[TotalAvgPrice]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+						   [ID]
+						  ,[RefFiscalYearID]
+						  ,[RefVoucherTypeID]
+						  ,[RefVoucherHeaderID]
+						  ,[ReturnExportNo]
+						  ,[ReturnExportDate]
+						  ,[RefKindID]
+						  ,[RefWarehouseID]
+						  ,[RefDetailAccountID]
+						  ,[ByRefrence]
+						  ,[RefBaseVoucherTypeID]
+						  ,[Comment]
+						  ,[_TotalNetPrice]
+						  ,[RefStatusID]
+						  ,[RefWriterID]
+						  ,[CreateDate]
+						  ,[RefEditorID]
+						  ,[UpdateDate]
+						  ,[RefAmountConfirmStatusID]
+						  ,[AmountConfirmStatusUpdateDate]
+						  ,[Price]
+						  ,[__Updated315__]
+						  ,getdate()
+						  ,@User_LoginId
+						  ,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.ReturnExportHeader
+							   ([ID]
+							  ,[RefFiscalYearID]
+							  ,[RefVoucherTypeID]
+							  ,[RefVoucherHeaderID]
+							  ,[ReturnExportNo]
+							  ,[ReturnExportDate]
+							  ,[RefKindID]
+							  ,[RefWarehouseID]
+							  ,[RefDetailAccountID]
+							  ,[ByRefrence]
+							  ,[RefBaseVoucherTypeID]
+							  ,[Comment]
+							  ,[_TotalNetPrice]
+							  ,[RefStatusID]
+							  ,[RefWriterID]
+							  ,[CreateDate]
+							  ,[RefEditorID]
+							  ,[UpdateDate]
+							  ,[RefAmountConfirmStatusID]
+							  ,[AmountConfirmStatusUpdateDate]
+							  ,[Price]
+							  ,[__Updated315__]
+							  ,[LogDate]
+							  ,[User_LoginId]
+							  ,[Log_Action])
+						SELECT
+							   [ID]
+							  ,[RefFiscalYearID]
+							  ,[RefVoucherTypeID]
+							  ,[RefVoucherHeaderID]
+							  ,[ReturnExportNo]
+							  ,[ReturnExportDate]
+							  ,[RefKindID]
+							  ,[RefWarehouseID]
+							  ,[RefDetailAccountID]
+							  ,[ByRefrence]
+							  ,[RefBaseVoucherTypeID]
+							  ,[Comment]
+							  ,[_TotalNetPrice]
+							  ,[RefStatusID]
+							  ,[RefWriterID]
+							  ,[CreateDate]
+							  ,[RefEditorID]
+							  ,[UpdateDate]
+							  ,[RefAmountConfirmStatusID]
+							  ,[AmountConfirmStatusUpdateDate]
+							  ,[Price]
+							  ,[__Updated315__]
+							  ,getdate()
+							  ,@User_LoginId
+							  ,@Act
+							FROM
+								deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+IF object_id(N'STO.Trg_ReturnExportDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_ReturnExportDetailItem
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_ReturnExportDetailItem]
+ON [sadganPaloodDev].[STO].[ReturnExportDetailItem]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.ReturnExportDetailItem
+						    ([ID]
+							,[RefReturnExportHeaderID]
+							,[RowNo]
+							,[RefExportDetailItemID]
+							,[RefReturnFactorDetailID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[RefLedgerAccountID]
+							,[RefDetailAccountID]
+							,[RefDetailAccount2ID]
+							,[RefDetailAccount3ID]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+						   [ID]
+						  ,[RefReturnExportHeaderID]
+						  ,[RowNo]
+						  ,[RefExportDetailItemID]
+						  ,[RefReturnFactorDetailID]
+						  ,[RefGoodsID]
+						  ,[RefBaseUnitID]
+						  ,[BaseAmount]
+						  ,[RefLateralUnitID]
+						  ,[LateralAmount]
+						  ,[_MainUnit]
+						  ,[_Amount]
+						  ,[_Rate]
+						  ,[_NetPrice]
+						  ,[RefLedgerAccountID]
+						  ,[RefDetailAccountID]
+						  ,[RefDetailAccount2ID]
+						  ,[RefDetailAccount3ID]
+						  ,[Comment]
+						  ,[OrderValue]
+						  ,[RemainRate]
+						  ,[RemainPrice]
+						  ,[RemainAmount]
+						  ,[RefPricingHeaderID]
+						  ,[_RefBaseUnitID]
+						  ,[_BaseAmount]
+						  ,[_RefLateralUnitID]
+						  ,[_LateralAmount]
+						  ,[BaseRate]
+						  ,[LateralRate]
+						  ,[Price]
+						  ,[__Updated315__]
+						  ,getdate()
+						  ,@User_LoginId
+						  ,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.ReturnExportDetailItem
+							([ID]
+							,[RefReturnExportHeaderID]
+							,[RowNo]
+							,[RefExportDetailItemID]
+							,[RefReturnFactorDetailID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[RefLedgerAccountID]
+							,[RefDetailAccountID]
+							,[RefDetailAccount2ID]
+							,[RefDetailAccount3ID]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefReturnExportHeaderID]
+							,[RowNo]
+							,[RefExportDetailItemID]
+							,[RefReturnFactorDetailID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[RefLedgerAccountID]
+							,[RefDetailAccountID]
+							,[RefDetailAccount2ID]
+							,[RefDetailAccount3ID]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+
+
+IF object_id(N'STO.Trg_TransferHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_TransferHeader
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_TransferHeader]
+ON [sadganPaloodDev].[STO].[TransferHeader]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.TransferHeader
+						    ([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[TransferNo]
+							,[TransferDate]
+							,[RefKindID]
+							,[RefSourceWarehouseID]
+							,[RefTargetWarehouseID]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+						     [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[TransferNo]
+							,[TransferDate]
+							,[RefKindID]
+							,[RefSourceWarehouseID]
+							,[RefTargetWarehouseID]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.TransferHeader
+							([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[TransferNo]
+							,[TransferDate]
+							,[RefKindID]
+							,[RefSourceWarehouseID]
+							,[RefTargetWarehouseID]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[TransferNo]
+							,[TransferDate]
+							,[RefKindID]
+							,[RefSourceWarehouseID]
+							,[RefTargetWarehouseID]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+IF object_id(N'STO.Trg_TransferDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_TransferDetailItem
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_TransferDetailItem]
+ON [sadganPaloodDev].[STO].[TransferDetailItem]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.TransferDetailItem
+						    ([ID]
+							,[RefTransferHeaderID]
+							,[RowNo]
+							,[RefTransferDetailItemID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+							 [ID]
+							,[RefTransferHeaderID]
+							,[RowNo]
+							,[RefTransferDetailItemID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.TransferDetailItem
+							([ID]
+							,[RefTransferHeaderID]
+							,[RowNo]
+							,[RefTransferDetailItemID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							[ID]
+							,[RefTransferHeaderID]
+							,[RowNo]
+							,[RefTransferDetailItemID]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+
+IF object_id(N'STO.Trg_StockBeginHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_StockBeginHeader
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_StockBeginHeader]
+ON [sadganPaloodDev].[STO].[StockBeginHeader]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.StockBeginHeader
+						    ([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[FormNo]
+							,[FormDate]
+							,[RefWarehouseID]
+							,[BasedOnPastFiscalYear]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[RefStatusID]
+							,[RefKindID]
 							,[Price]
 							,[__Updated315__]
 							,[LogDate]
@@ -1271,130 +1847,531 @@ BEGIN
 							 [ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
-							,[RefVoucherHeaderID]
-							,[ReturnImportNo]
-							,[ReturnImportDate]
-							,[RefKindID]
+							,[FormNo]
+							,[FormDate]
 							,[RefWarehouseID]
-							,[RefDetailAccountID]
-							,[ByRefrence]
+							,[BasedOnPastFiscalYear]
 							,[Comment]
-							,[_TotalPrice]
-							,[_TotalTaxPrice]
-							,[_TotalChargePrice]
-							,[_TotalTransportPrice]
-							,[_TotalTransportTaxPrice]
-							,[_TotalTransportChargePrice]
 							,[_TotalNetPrice]
-							,[RefStatusID]
 							,[RefWriterID]
 							,[CreateDate]
 							,[RefEditorID]
 							,[UpdateDate]
 							,[RefAmountConfirmStatusID]
 							,[AmountConfirmStatusUpdateDate]
-							,[_TotalAvgPrice]
-							,[_TotalNetAvgPrice]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[AvgPrice]
-							,[TotalAvgPrice]
+							,[RefStatusID]
+							,[RefKindID]
 							,[Price]
 							,[__Updated315__]
 							,getdate()
 							,@User_LoginId
 							,@Act
-					FROM
-						INSERTED i
+						FROM
+							INSERTED i
 			END
 
 		ELSE
-		BEGIN
-			INSERT INTO sadganBase.STO.ReturnImportHeader
-						([ID]
-						,[RefVoucherTypeID]
-						,[RefFiscalYearID]
-						,[RefVoucherHeaderID]
-						,[ReturnImportNo]
-						,[ReturnImportDate]
-						,[RefKindID]
-						,[RefWarehouseID]
-						,[RefDetailAccountID]
-						,[ByRefrence]
-						,[Comment]
-						,[_TotalPrice]
-						,[_TotalTaxPrice]
-						,[_TotalChargePrice]
-						,[_TotalTransportPrice]
-						,[_TotalTransportTaxPrice]
-						,[_TotalTransportChargePrice]
-						,[_TotalNetPrice]
-						,[RefStatusID]
-						,[RefWriterID]
-						,[CreateDate]
-						,[RefEditorID]
-						,[UpdateDate]
-						,[RefAmountConfirmStatusID]
-						,[AmountConfirmStatusUpdateDate]
-						,[_TotalAvgPrice]
-						,[_TotalNetAvgPrice]
-						,[TaxPrice]
-						,[ChargePrice]
-						,[TotalPrice]
-						,[AvgPrice]
-						,[TotalAvgPrice]
-						,[Price]
-						,[__Updated315__]
-						,[LogDate]
-						,[User_LoginId]
-						,[Log_Action])
-					SELECT
-						 [ID]
-						,[RefVoucherTypeID]
-						,[RefFiscalYearID]
-						,[RefVoucherHeaderID]
-						,[ReturnImportNo]
-						,[ReturnImportDate]
-						,[RefKindID]
-						,[RefWarehouseID]
-						,[RefDetailAccountID]
-						,[ByRefrence]
-						,[Comment]
-						,[_TotalPrice]
-						,[_TotalTaxPrice]
-						,[_TotalChargePrice]
-						,[_TotalTransportPrice]
-						,[_TotalTransportTaxPrice]
-						,[_TotalTransportChargePrice]
-						,[_TotalNetPrice]
-						,[RefStatusID]
-						,[RefWriterID]
-						,[CreateDate]
-						,[RefEditorID]
-						,[UpdateDate]
-						,[RefAmountConfirmStatusID]
-						,[AmountConfirmStatusUpdateDate]
-						,[_TotalAvgPrice]
-						,[_TotalNetAvgPrice]
-						,[TaxPrice]
-						,[ChargePrice]
-						,[TotalPrice]
-						,[AvgPrice]
-						,[TotalAvgPrice]
-						,[Price]
-						,[__Updated315__]
-						,getdate()
-						,@User_LoginId
-						,@Act
-					FROM
-						deleted i
-		END
-    
+			BEGIN
+				 INSERT INTO sadganBase.STO.StockBeginHeader
+							([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[FormNo]
+							,[FormDate]
+							,[RefWarehouseID]
+							,[BasedOnPastFiscalYear]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[RefStatusID]
+							,[RefKindID]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[FormNo]
+							,[FormDate]
+							,[RefWarehouseID]
+							,[BasedOnPastFiscalYear]
+							,[Comment]
+							,[_TotalNetPrice]
+							,[RefWriterID]
+							,[CreateDate]
+							,[RefEditorID]
+							,[UpdateDate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[RefStatusID]
+							,[RefKindID]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
 END
 SET ANSI_NULLS ON
 GO
 -----------------------------------------------------------
+
+IF object_id(N'STO.Trg_StockBeginDetailItem', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_StockBeginDetailItem
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_StockBeginDetailItem]
+ON [sadganPaloodDev].[STO].[StockBeginDetailItem]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.StockBeginDetailItem
+						    ([ID]
+							,[RefStockBeginHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[RefStockEndDetailID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+							 [ID]
+							,[RefStockBeginHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[RefStockEndDetailID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.StockBeginDetailItem
+							([ID]
+							,[RefStockBeginHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[RefStockEndDetailID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefStockBeginHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[RefStockEndDetailID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+
+
+IF object_id(N'STO.Trg_StockEndHeader', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_StockEndHeader
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_StockEndHeader]
+ON [sadganPaloodDev].[STO].[StockEndHeader]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.StockEndHeader
+						    ([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefKindID]
+							,[StockEndNo]
+							,[StockEndDate]
+							,[RefWarehouseID]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[RefEditorID]
+							,[CreateDate]
+							,[Updatedate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalNetPrice]
+							,[Comment]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+							 [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefKindID]
+							,[StockEndNo]
+							,[StockEndDate]
+							,[RefWarehouseID]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[RefEditorID]
+							,[CreateDate]
+							,[Updatedate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalNetPrice]
+							,[Comment]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.StockEndHeader
+							([ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefKindID]
+							,[StockEndNo]
+							,[StockEndDate]
+							,[RefWarehouseID]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[RefEditorID]
+							,[CreateDate]
+							,[Updatedate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalNetPrice]
+							,[Comment]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefVoucherTypeID]
+							,[RefFiscalYearID]
+							,[RefKindID]
+							,[StockEndNo]
+							,[StockEndDate]
+							,[RefWarehouseID]
+							,[RefStatusID]
+							,[RefWriterID]
+							,[RefEditorID]
+							,[CreateDate]
+							,[Updatedate]
+							,[RefAmountConfirmStatusID]
+							,[AmountConfirmStatusUpdateDate]
+							,[_TotalNetPrice]
+							,[Comment]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+IF object_id(N'STO.Trg_StockEndDetail', N'TR') IS NOT NULL DROP TRIGGER STO.Trg_StockEndDetail
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [STO].[Trg_StockEndDetail]
+ON [sadganPaloodDev].[STO].[StockEndDetail]
+AFTER INSERT, DELETE,UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @User_LoginId ndtid
+	
+	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
+
+	DECLARE @Act int = 0/*insert*/
+	IF EXISTS(SELECT id FROM deleted WHERE id IN (SELECT id FROM INSERTED))
+		SET @Act=1/*update*/
+	ELSE IF EXISTS(SELECT 1 FROM deleted)
+		SET @Act=2/*delete*/
+
+		IF @Act=0 or @Act=1
+			BEGIN
+				INSERT INTO sadganBase.STO.StockEndDetail
+						    ([ID]
+							,[RefStockEndHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+					SELECT
+							 [ID]
+							,[RefStockEndHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							INSERTED i
+			END
+
+		ELSE
+			BEGIN
+				 INSERT INTO sadganBase.STO.StockEndDetail
+							([ID]
+							,[RefStockEndHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,[LogDate]
+							,[User_LoginId]
+							,[Log_Action])
+						SELECT
+							 [ID]
+							,[RefStockEndHeaderID]
+							,[RowNo]
+							,[RefGoodsID]
+							,[RefBaseUnitID]
+							,[BaseAmount]
+							,[RefLateralUnitID]
+							,[LateralAmount]
+							,[_MainUnit]
+							,[_Amount]
+							,[_Rate]
+							,[_NetPrice]
+							,[Comment]
+							,[OrderValue]
+							,[RemainRate]
+							,[RemainPrice]
+							,[RemainAmount]
+							,[RefPricingHeaderID]
+							,[_RefBaseUnitID]
+							,[_BaseAmount]
+							,[_RefLateralUnitID]
+							,[_LateralAmount]
+							,[BaseRate]
+							,[LateralRate]
+							,[Price]
+							,[__Updated315__]
+							,getdate()
+							,@User_LoginId
+							,@Act
+						FROM
+							deleted i
+			END
+END
+SET ANSI_NULLS ON
+GO
+-----------------------------------------------------------
+
 IF object_id(N'ACC.Trg_BuyFactorHeader', N'TR') IS NOT NULL DROP TRIGGER ACC.Trg_BuyFactorHeader
 SET ANSI_NULLS ON
 GO
@@ -3050,188 +4027,6 @@ SET ANSI_NULLS ON
 GO
 -----------------------------------------------------------
 
-IF object_id(N'SAL.Trg_ReturnFactorDetail', N'TR') IS NOT NULL DROP TRIGGER SAL.Trg_ReturnFactorDetail
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TRIGGER [SAL].[Trg_ReturnFactorDetail]
-ON [sadganPaloodDev].[SAL].[ReturnFactorDetail]
-AFTER INSERT, DELETE,UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-	DECLARE @User_LoginId ndtid
-	
-	SELECT @User_LoginId=(SELECT TOP 1 ID FROM GNR.UserLogin where SessionId=@@SPID ORDER BY ServerTime DESC)
-
-	DECLARE @Act int = 0/*insert*/
-	IF EXISTS(SELECT id FROM deleted WHERE id in (SELECT id FROM INSERTED))
-		SET @Act=1/*update*/
-	ELSE IF EXISTS(SELECT 1 FROM deleted)
-		SET @Act=2/*delete*/
-
-		IF @Act=0 or @Act=1
-			BEGIN
-				INSERT INTO sadganBase.SAL.ReturnFactorDetail
-							([ID]
-							,[RefReturnFactorHeaderID]
-							,[RefFactorDetailID]
-							,[RowNo]
-							,[RefGoodsID]
-							,[_UnitType]
-							,[RefBaseUnitID]
-							,[RefLateralUnitID]
-							,[BaseAmount]
-							,[LateralAmount]
-							,[_Amount]
-							,[_Rate]
-							,[Price]
-							,[Discount]
-							,[Addition]
-							,[Comment]
-							,[_RefBaseUnitID]
-							,[_BaseAmount]
-							,[_RefLateralUnitID]
-							,[_LateralAmount]
-							,[_Price]
-							,[_Discount]
-							,[_Addition]
-							,[_Tax]
-							,[_Charge]
-							,[_NetPrice]
-							,[BaseRate]
-							,[LateralRate]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[__Updated315__]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-					SELECT
-							 [ID]
-							,[RefReturnFactorHeaderID]
-							,[RefFactorDetailID]
-							,[RowNo]
-							,[RefGoodsID]
-							,[_UnitType]
-							,[RefBaseUnitID]
-							,[RefLateralUnitID]
-							,[BaseAmount]
-							,[LateralAmount]
-							,[_Amount]
-							,[_Rate]
-							,[Price]
-							,[Discount]
-							,[Addition]
-							,[Comment]
-							,[_RefBaseUnitID]
-							,[_BaseAmount]
-							,[_RefLateralUnitID]
-							,[_LateralAmount]
-							,[_Price]
-							,[_Discount]
-							,[_Addition]
-							,[_Tax]
-							,[_Charge]
-							,[_NetPrice]
-							,[BaseRate]
-							,[LateralRate]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[__Updated315__]
-							,getdate()
-							,@User_LoginId
-							,@Act
-					FROM
-						INSERTED i
-			END
-
-		ELSE
-			BEGIN
-				INSERT INTO sadganBase.SAL.ReturnFactorDetail
-							([ID]
-							,[RefReturnFactorHeaderID]
-							,[RefFactorDetailID]
-							,[RowNo]
-							,[RefGoodsID]
-							,[_UnitType]
-							,[RefBaseUnitID]
-							,[RefLateralUnitID]
-							,[BaseAmount]
-							,[LateralAmount]
-							,[_Amount]
-							,[_Rate]
-							,[Price]
-							,[Discount]
-							,[Addition]
-							,[Comment]
-							,[_RefBaseUnitID]
-							,[_BaseAmount]
-							,[_RefLateralUnitID]
-							,[_LateralAmount]
-							,[_Price]
-							,[_Discount]
-							,[_Addition]
-							,[_Tax]
-							,[_Charge]
-							,[_NetPrice]
-							,[BaseRate]
-							,[LateralRate]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[__Updated315__]
-							,[LogDate]
-							,[User_LoginId]
-							,[Log_Action])
-						SELECT
-							 [ID]
-							,[RefReturnFactorHeaderID]
-							,[RefFactorDetailID]
-							,[RowNo]
-							,[RefGoodsID]
-							,[_UnitType]
-							,[RefBaseUnitID]
-							,[RefLateralUnitID]
-							,[BaseAmount]
-							,[LateralAmount]
-							,[_Amount]
-							,[_Rate]
-							,[Price]
-							,[Discount]
-							,[Addition]
-							,[Comment]
-							,[_RefBaseUnitID]
-							,[_BaseAmount]
-							,[_RefLateralUnitID]
-							,[_LateralAmount]
-							,[_Price]
-							,[_Discount]
-							,[_Addition]
-							,[_Tax]
-							,[_Charge]
-							,[_NetPrice]
-							,[BaseRate]
-							,[LateralRate]
-							,[TaxPrice]
-							,[ChargePrice]
-							,[TotalPrice]
-							,[__Updated315__]
-							,getdate()
-							,@User_LoginId
-							,@Act
-						FROM
-							deleted i
-			END
-    
-END
-SET ANSI_NULLS ON
-GO
------------------------------------------------------------
 IF object_id(N'SAL.Trg_ReturnFactorDetail', N'TR') IS NOT NULL DROP TRIGGER SAL.Trg_ReturnFactorDetail
 SET ANSI_NULLS ON
 GO
