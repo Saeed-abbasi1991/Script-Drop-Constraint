@@ -1,0 +1,1 @@
+Rename DataBaseinfo Table in Gnr Schema to another name such Old_DataBaseInfo

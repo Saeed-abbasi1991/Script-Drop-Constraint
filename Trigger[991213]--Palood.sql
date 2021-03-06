@@ -1139,7 +1139,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnExportHeader
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnExportHeader
 						    ([ID]
 							,[RefFiscalYearID]
 							,[RefVoucherTypeID]
@@ -1198,11 +1199,16 @@ BEGIN
 							
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT'ERROR Trg_ReturnExportHeader'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
-				 INSERT INTO sadganBase.STO.ReturnExportHeader
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnExportHeader
 							  ([ID]
 							  ,[RefFiscalYearID]
 							  ,[RefVoucherTypeID]
@@ -1260,6 +1266,10 @@ BEGIN
 							  ,@ClientAddress
 							FROM
 								deleted i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_ReturnExportHeader'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -1292,7 +1302,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.ReturnExportDetailItem
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.ReturnExportDetailItem
 						    ([ID]
 							,[RefReturnExportHeaderID]
 							,[RowNo]
@@ -1359,10 +1370,15 @@ BEGIN
 
 						FROM
 							INSERTED i
+			    END TRY
+				BEGIN CATCH
+				 PRINT'ERROR Trg_ReturnExportDetailItem'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				 INSERT INTO sadganBase.STO.ReturnExportDetailItem
 							([ID]
 							,[RefReturnExportHeaderID]
@@ -1429,6 +1445,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+				BEGIN CATCH
+				 PRINT'ERROR Trg_ReturnExportDetailItem'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -1463,7 +1483,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.TransferHeader
+				BEGIN TRY
+					INSERT INTO sadganBase.STO.TransferHeader
 						    ([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -1515,11 +1536,16 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+				 PRINT'ERROR Trg_TransferHeader'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
-				 INSERT INTO sadganBase.STO.TransferHeader
+			     BEGIN TRY
+					INSERT INTO sadganBase.STO.TransferHeader
 							([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -1571,6 +1597,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			 END TRY
+				BEGIN CATCH
+				 PRINT'ERROR Trg_TransferHeader'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -1603,6 +1633,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			BEGIN TRY
 				INSERT INTO sadganBase.STO.TransferDetailItem
 						    ([ID]
 							,[RefTransferHeaderID]
@@ -1659,10 +1690,15 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+				 PRINT 'ERROR Trg_TransferDetailItem'
+				END CATCH			
 			END
 
 		ELSE
 			BEGIN
+			     BEGIN TRY
 				 INSERT INTO sadganBase.STO.TransferDetailItem
 							([ID]
 							,[RefTransferHeaderID]
@@ -1719,6 +1755,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+				BEGIN CATCH
+				 PRINT 'ERROR Trg_TransferDetailItem'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -1752,7 +1792,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.StockBeginHeader
+			     BEGIN TRY
+				               INSERT INTO sadganBase.STO.StockBeginHeader
 						    ([ID]
 							,[RefVoucherTypeID]
 							,[RefFiscalYearID]
@@ -1802,10 +1843,15 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockBeginHeade'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				 INSERT INTO sadganBase.STO.StockBeginHeader
 							([ID]
 							,[RefVoucherTypeID]
@@ -1856,6 +1902,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockBeginHeade'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -1889,7 +1939,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.StockBeginDetailItem
+			    BEGIN TRY
+					INSERT INTO sadganBase.STO.StockBeginDetailItem
 						    ([ID]
 							,[RefStockBeginHeaderID]
 							,[RowNo]
@@ -1945,10 +1996,15 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockBeginDetailItem'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				 INSERT INTO sadganBase.STO.StockBeginDetailItem
 							([ID]
 							,[RefStockBeginHeaderID]
@@ -2005,6 +2061,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockBeginDetailItem'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -2039,6 +2099,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			    BEGIN TRY
 				INSERT INTO sadganBase.STO.StockEndHeader
 						    ([ID]
 							,[RefVoucherTypeID]
@@ -2089,10 +2150,15 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+			    END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockEndHeader'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+			     BEGIN TRY
 				 INSERT INTO sadganBase.STO.StockEndHeader
 							([ID]
 							,[RefVoucherTypeID]
@@ -2143,6 +2209,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockEndHeader'
+				END CATCH
 			END
 END
 SET ANSI_NULLS ON
@@ -2175,7 +2245,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.STO.StockEndDetail
+			    BEGIN TRY
+					INSERT INTO sadganBase.STO.StockEndDetail
 						    ([ID]
 							,[RefStockEndHeaderID]
 							,[RowNo]
@@ -2229,10 +2300,15 @@ BEGIN
 							,@ClientAddress
 						FROM
 							INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockEndDetai'
+				END CATCH	
 			END
 
 		ELSE
 			BEGIN
+			BEGIN TRy
 				 INSERT INTO sadganBase.STO.StockEndDetail
 							([ID]
 							,[RefStockEndHeaderID]
@@ -2287,6 +2363,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_StockEndDetai'
+				END CATCH		
 			END
 END
 SET ANSI_NULLS ON
@@ -2320,7 +2400,8 @@ BEGIN
 
 		if @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.ACC.BuyFactorHeader
+			    BEGIN TRY
+				 INSERT INTO sadganBase.ACC.BuyFactorHeader
 							([ID]
 							,[RefVoucherTypeID]
 							,[RefVoucherHeaderID]
@@ -2388,11 +2469,16 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+                END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_BuyFactorHeader'
+				END CATCH
 			END
 
 		ELSE
 		BEGIN
-			INSERT INTO sadganBase.ACC.BuyFactorHeader
+		       BEGIN TRY
+			        INSERT INTO sadganBase.ACC.BuyFactorHeader
 						([ID]
 						,[RefVoucherTypeID]
 						,[RefVoucherHeaderID]
@@ -2460,6 +2546,10 @@ BEGIN
 						,@ClientAddress
 					FROM
 						deleted i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_BuyFactorHeader'
+				END CATCH
 		END
     
 END
@@ -2493,7 +2583,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.ACC.BuyFactorDetail
+				BEGIN TRY
+				 INSERT INTO sadganBase.ACC.BuyFactorDetail
 							([ID]
 							,[RefBuyFactorHeaderID]
 							,[RowNo]
@@ -2559,10 +2650,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_BuyFactorDetail'
+				END CATCH	
 			END
 
 		ELSE
 			BEGIN
+			   BEGIN TRY
 				INSERT INTO sadganBase.ACC.BuyFactorDetail
 							([ID]
 							,[RefBuyFactorHeaderID]
@@ -2629,6 +2725,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			  END TRY
+		      BEGIN CATCH
+			       PRINT 'ERROR Trg_BuyFactorDetail'
+			   END CATCH
 			END
     
 END
@@ -2663,7 +2763,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.ACC.VoucherHeader
+			    BEGIN TRY
+				     INSERT INTO sadganBase.ACC.VoucherHeader
 							([ID]
 							,[FiscalYearID]
 							,[VoucherKindID]
@@ -2723,10 +2824,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_VoucherHeader'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+			  BEGIN TRY
 				INSERT INTO sadganBase.ACC.VoucherHeader
 							([ID]
 							,[FiscalYearID]
@@ -2787,6 +2893,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			  END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_VoucherHeader'
+				END CATCH
 			END
     
 END
@@ -2820,6 +2930,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			BEGIN TRY
 				INSERT INTO sadganBase.ACC.VoucherDetail
 							([ID]
 							,[VoucherHeaderID]
@@ -2868,10 +2979,16 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+									END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_VoucherDetail'
+				END CATCH
 			END
+			
 
 		ELSE
 			BEGIN
+			BEGIN TRY
 				INSERT INTO sadganBase.ACC.VoucherDetail
 							([ID]
 							,[VoucherHeaderID]
@@ -2920,6 +3037,11 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+										END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_VoucherDetail'
+				END CATCH
+			
 			END
     
 END
@@ -2953,7 +3075,8 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
-				INSERT INTO sadganBase.SAL.PreFactorHeader
+				BEGIN TRY
+				  INSERT INTO sadganBase.SAL.PreFactorHeader
 							([ID]
 							,[RefFiscalYearID]
 							,[PreFactorNo]
@@ -3031,10 +3154,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_PreFactorHeader'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+			BEGIN TRY
 				INSERT INTO sadganBase.SAL.PreFactorHeader
 							([ID]
 							,[RefFiscalYearID]
@@ -3113,6 +3241,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_PreFactorHeader'
+				END CATCH
 			END
     
 END
@@ -3147,6 +3279,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			    BEGIN TRY
 				INSERT INTO sadganBase.SAL.PreFactorDetail
 							([ID]
 							,[RefPreFactorHeaderID]
@@ -3211,10 +3344,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+				BEGIN CATCH
+					PRINT 'ERROR Trg_PreFactorDetail'
+				END CATCH
 			END
 
 		ELSE
 			BEGIN
+			   BEGIN TRY
 				INSERT INTO sadganBase.SAL.PreFactorDetail
 							([ID]
 							,[RefPreFactorHeaderID]
@@ -3279,6 +3417,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			   END TRY
+			   BEGIN CATCH
+					PRINT 'ERROR Trg_PreFactorDetail'
+			   END CATCH
 			END
     
 END
@@ -3313,6 +3455,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			    BEGIN TRY
 				INSERT INTO sadganBase.SAL.FactorHeader
 							([ID]
 							,[RefFiscalYearID]
@@ -3395,10 +3538,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+				END TRY
+			   BEGIN CATCH
+					PRINT 'ERROR Trg_FactorHeader'
+			   END CATCH
 			END
 
 		ELSE
 			BEGIN
+				BEGIN TRY
 				INSERT INTO sadganBase.SAL.FactorHeader
 							([ID]
 							,[RefFiscalYearID]
@@ -3481,6 +3629,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			   END TRY
+			   BEGIN CATCH
+					PRINT 'ERROR Trg_FactorHeader'
+			   END CATCH
 			END
     
 END
@@ -3515,6 +3667,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			     BEGIN TRY
 				INSERT INTO sadganBase.SAL.FactorDetail
 							([ID]
 							,[RefFactorHeaderID]
@@ -3581,10 +3734,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+			    END TRY
+			   BEGIN CATCH
+					PRINT 'ERROR Trg_FactorDetail'
+			   END CATCH
 			END
 
 		ELSE
 			BEGIN
+			     BEGIN TRY
 				INSERT INTO sadganBase.SAL.FactorDetail
 							([ID]
 							,[RefFactorHeaderID]
@@ -3651,6 +3809,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+			    BEGIN CATCH
+					PRINT 'ERROR Trg_FactorDetail'
+			    END CATCH
 			END
     
 END
@@ -3684,6 +3846,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+			    BEGIN TRY
 				INSERT INTO sadganBase.SAL.ReturnFactorHeader
 							([ID]
 							,[RefFiscalYearID]
@@ -3762,10 +3925,15 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+			    END TRY
+			    BEGIN CATCH
+					PRINT 'ERROR Trg_ReturnFactorHeader'
+			    END CATCH
 			END
 
 		ELSE
 			BEGIN
+			    BEGIN TRY
 				INSERT INTO sadganBase.SAL.ReturnFactorHeader
 							([ID]
 							,[RefFiscalYearID]
@@ -3844,6 +4012,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+			    END TRY
+			    BEGIN CATCH
+					PRINT 'ERROR Trg_ReturnFactorHeader'
+			    END CATCH
 			END
     
 END
@@ -3878,6 +4050,7 @@ BEGIN
 
 		IF @Act=0 or @Act=1
 			BEGIN
+				BEGIN TRY
 				INSERT INTO sadganBase.SAL.ReturnFactorDetail
 							([ID]
 							,[RefReturnFactorHeaderID]
@@ -3934,10 +4107,14 @@ BEGIN
 							,@ClientAddress
 					FROM
 						INSERTED i
+						END TRY
+			    BEGIN CATCH
+					PRINT 'ERROR Trg_ReturnFactorDetail'
+			    END CATCH
 			END
-
 		ELSE
 			BEGIN
+				BEGIN TRY
 				INSERT INTO sadganBase.SAL.ReturnFactorDetail
 							([ID]
 							,[RefReturnFactorHeaderID]
@@ -3994,6 +4171,10 @@ BEGIN
 							,@ClientAddress
 						FROM
 							deleted i
+				END TRY
+			    BEGIN CATCH
+					PRINT 'ERROR Trg_ReturnFactorDetail'
+			    END CATCH
 			END
     
 END

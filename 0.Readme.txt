@@ -1,1 +1,0 @@
-Rename DataBaseinfo in Gnr Schema
