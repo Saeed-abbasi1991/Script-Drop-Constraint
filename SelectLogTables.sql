@@ -1,74 +1,86 @@
-select * from sadganPaloodDev.STO.ImportHeader
-select  TOP 5 * from sadganbase.STO.ImportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId DESC 
+
+select * from sadgan001.STO.ImportHeader
+select  TOP 5 * from SadganLog001.STO.ImportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId DESC 
 -----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ImportDetailItem
-select * from sadganbase.STO.ImportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+
+select * from sadgan001.STO.ImportDetailItem
+select * from SadganLog001.STO.ImportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ---------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ReturnImportHeader
-select * from sadganbase.STO.ReturnImportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+
+select * from sadgan001.STO.ReturnImportHeader
+/*Not Logged*/
+select * from SadganLog001.STO.ReturnImportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ReturnImportDetailItem
-select * from sadganbase.STO.ReturnImportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.ReturnImportDetailItem
+/*Not Logged*/
+select * from SadganLog001.STO.ReturnImportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ExportHeader
-select * from sadganbase.STO.ExportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+
+select * from sadgan001.STO.ExportHeader
+select * from SadganLog001.STO.ExportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ExportDetailItem
-select * from sadganbase.STO.ExportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+
+select * from sadgan001.STO.ExportDetailItem
+select * from SadganLog001.STO.ExportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ReturnExportHeader
-select * from sadganbase.STO.ReturnExportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.ReturnExportHeader/*Not Logged*/
+select * from SadganLog001.STO.ReturnExportHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.ReturnExportDetailItem
-select * from sadganbase.STO.ReturnExportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.ReturnExportDetailItem/*Not Logged*/
+select * from SadganLog001.STO.ReturnExportDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.TransferHeader
-select * from sadganbase.STO.TransferHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.TransferHeader
+select * from SadganLog001.STO.TransferHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.TransferDetailItem
-select * from sadganbase.STO.TransferDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.TransferDetailItem
+select * from SadganLog001.STO.TransferDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.TransferDetailItem
-select * from sadganbase.STO.TransferDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.TransferDetailItem
+select * from SadganLog001.STO.TransferDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.StockBeginHeader
-select * from sadganbase.STO.StockBeginHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.StockBeginHeader/*Not Logged*/
+select * from SadganLog001.STO.StockBeginHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.StockBeginDetailItem
-select * from sadganbase.STO.StockBeginDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.StockBeginDetailItem/*Not Logged*/
+select * from SadganLog001.STO.StockBeginDetailItem WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.STO.StockEndHeader
-select * from sadganbase.STO.StockEndHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.StockEndHeader/*Table is Empty*/
+select * from SadganLog001.STO.StockEndHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ---------------------------------------------------------------------------- 
-select * from sadganPaloodDev.STO.StockEndDetail
-select * from sadganbase.STO.StockEndDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.STO.StockEndDetail/*Table is Empty*/
+select * from SadganLog001.STO.StockEndDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ---------------------------------------------------------------------------- 
-select * from sadganPaloodDev.ACC.BuyFactorHeader
-select * from sadganbase.ACC.BuyFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.ACC.BuyFactorHeader/*Not Logged*/
+select * from SadganLog001.ACC.BuyFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.ACC.BuyFactorDetail
-select * from sadganbase.ACC.BuyFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.ACC.BuyFactorDetail/*Not Logged*/
+select * from SadganLog001.ACC.BuyFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ---------------------------------------------------------------------------- 
-select * from sadganPaloodDev.ACC.VoucherDetail
-select * from sadganbase.ACC.VoucherDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.ACC.VoucherDetail
+select * from SadganLog001.ACC.VoucherDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.SAL.PreFactorHeader
-select * from sadganbase.SAL.PreFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.ACC.VoucherHeader
+select  TOP 5 * from SadganLog001.ACC.VoucherHeader WHERE Log_Action IS NOT NULL ORDER BY LogId DESC
+-------------------------------------------------------------------------------------
+select * from sadgan001.SAL.PreFactorHeader
+select * from SadganLog001.SAL.PreFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.SAL.PreFactorDetail
-select * from sadganbase.SAL.PreFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+
+select * from sadgan001.SAL.PreFactorDetail
+select * from SadganLog001.SAL.PreFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.SAL.FactorHeader
-select * from sadganbase.SAL.FactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+ 
+select * from sadgan001.SAL.FactorHeader
+select * from SadganLog001.SAL.FactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.SAL.FactorDetail
-select * from sadganbase.SAL.FactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.SAL.FactorDetail
+select * from SadganLog001.SAL.FactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
-select * from sadganPaloodDev.SAL.ReturnFactorHeader
-select * from sadganbase.SAL.ReturnFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.SAL.ReturnFactorHeader
+select * from SadganLog001.SAL.ReturnFactorHeader WHERE Log_Action IS NOT NULL ORDER BY LogId
 ---------------------------------------------------------------------------- 
-select * from sadganPaloodDev.SAL.ReturnFactorDetail
-select * from sadganbase.SAL.ReturnFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
+select * from sadgan001.SAL.ReturnFactorDetail
+select * from SadganLog001.SAL.ReturnFactorDetail WHERE Log_Action IS NOT NULL ORDER BY LogId
 ----------------------------------------------------------------------------
 
 
