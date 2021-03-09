@@ -1,5 +1,5 @@
 
-DECLARE @DbLogName nvarchar(max)='sadganBase'
+DECLARE @DbLogName nvarchar(max)='sadganlog'
 DECLARE @Commnads TABLE(Id bigint Identity(1,1),SchemaName nvarchar(max),TableName nvarchar(max),Command nvarchar(max))
 INSERT INTO @Commnads
 select 
@@ -30,11 +30,11 @@ select
 					   ,dtype.name typename
 					   ,OBJECT_SCHEMA_NAME(cols.object_id)schemaname
 				 FROM 
-				       sadganBase.sys.columns cols
+				       sadganlog.sys.columns cols
 				 JOIN
-				       sadganBase.sys.objects objs ON cols.object_id=objs.object_id
+				       sadganlog.sys.objects objs ON cols.object_id=objs.object_id
 				 JOIN
-				       sadganBase.sys.types dtype ON cols.system_type_id=dtype.system_type_id AND cols.user_type_id=dtype.user_type_id
+				       sadganlog.sys.types dtype ON cols.system_type_id=dtype.system_type_id AND cols.user_type_id=dtype.user_type_id
 				 WHERE 
 					   objs.type=N'U'
 				)LOGDB
@@ -43,15 +43,14 @@ select
 		where 
 					LOGDB.objectid is null 
 
-					select * from @Commnads
-
+SELECT * FROM @Commnads					
 DECLARE @Id bigint=(SELECT TOP 1 Id FROM @Commnads)
 
 WHILE @Id IS NOT NULL
 	BEGIN
 		DECLARE @cmd nvarchar(max)=(SELECT TOP 1 Command FROM @Commnads WHERE Id=@Id)
 		PRINT @cmd
-		EXEC sp_executesql @cmd
+		--EXEC sp_executesql @cmd
 		DELETE FROM @Commnads WHERE Id=@Id
 		SET @Id=(SELECT TOP 1 Id FROM @Commnads)
 	END
