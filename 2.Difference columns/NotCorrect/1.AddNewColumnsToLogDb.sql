@@ -1,18 +1,27 @@
 
-DECLARE @DbLogName nvarchar(max)='sadganlog'
-DECLARE @Commnads TABLE(Id bigint Identity(1,1),SchemaName nvarchar(max),TableName nvarchar(max),Command nvarchar(max))
+DECLARE @MainDb_Id Smallint= db_id('sadganPaloodDev')
+
+DECLARE @LogDb_Id Smallint= db_id('sadganBase')
+
+
+DECLARE @DbLogName nvarchar(max)='sadganBase'
+
+DECLARE @Commnads TABLE(Id bigint Identity(1,1),SchemaName nvarchar(max),SourceTableName nvarchar(max),DestinationTableName nvarchar(max),ColumnName nvarchar(max), Command nvarchar(max))
+
 INSERT INTO @Commnads
 select 
 		MainDB.schemaname,
 		MainDB.tblname,
+		LOGDB.tblname,
+		MainDB.colname,
 		'ALTER TABLE '+@DbLogName+'.'+MainDB.schemaname+'.'+MainDB.tblname+' ADD '+MainDB.colname+' '+MainDB.typename+' NULL'
 		FROM
               (SELECT 
 				     cols.name colname
 					 ,cols.object_id objectid
-					 ,OBJECT_NAME(cols.object_id) as tblname
+					 ,OBJECT_NAME(cols.object_id,@MainDb_Id) as tblname
 					 ,dtype.name typename
-					 ,OBJECT_SCHEMA_NAME(cols.object_id)schemaname 
+					 ,OBJECT_SCHEMA_NAME(cols.object_id,@MainDb_Id)schemaname 
 			   FROM 
 					 sadganPaloodDev.sys.columns cols
 			   JOIN
@@ -26,15 +35,15 @@ select
 				(SELECT 
 				       cols.name colname
 					   ,cols.object_id objectid
-					   ,OBJECT_NAME(cols.object_id) as tblname
+					   ,OBJECT_NAME(cols.object_id,@LogDb_Id) as tblname
 					   ,dtype.name typename
-					   ,OBJECT_SCHEMA_NAME(cols.object_id)schemaname
+					   ,OBJECT_SCHEMA_NAME(cols.object_id,@LogDb_Id)schemaname
 				 FROM 
-				       sadganlog.sys.columns cols
+				       sadganBase.sys.columns cols
 				 JOIN
-				       sadganlog.sys.objects objs ON cols.object_id=objs.object_id
+				       sadganBase.sys.objects objs ON cols.object_id=objs.object_id
 				 JOIN
-				       sadganlog.sys.types dtype ON cols.system_type_id=dtype.system_type_id AND cols.user_type_id=dtype.user_type_id
+				       sadganBase.sys.types dtype ON cols.system_type_id=dtype.system_type_id AND cols.user_type_id=dtype.user_type_id
 				 WHERE 
 					   objs.type=N'U'
 				)LOGDB
@@ -43,7 +52,7 @@ select
 		where 
 					LOGDB.objectid is null 
 
-SELECT * FROM @Commnads					
+SELECT * FROM @Commnads	where DestinationTableName is not null/**/				
 DECLARE @Id bigint=(SELECT TOP 1 Id FROM @Commnads)
 
 WHILE @Id IS NOT NULL

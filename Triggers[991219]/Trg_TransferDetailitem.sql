@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 			BEGIN TRY
-				INSERT INTO SadganLog.STO.TransferDetailItem
+				INSERT INTO sadganbase.STO.TransferDetailItem
 						    ([ID]
       ,[RefTransferHeaderID]
       ,[RowNo]
@@ -108,7 +108,7 @@ BEGIN
 		ELSE
 			BEGIN
 			     BEGIN TRY
-				 INSERT INTO SadganLog.STO.TransferDetailItem
+				 INSERT INTO sadganbase.STO.TransferDetailItem
 							([ID]
       ,[RefTransferHeaderID]
       ,[RowNo]

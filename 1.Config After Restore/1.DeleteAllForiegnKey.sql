@@ -1,5 +1,5 @@
 --This Scripts Delete All ForiegnKeys
-USE sadganBase
+USE sadganbase
 DECLARE @T TABLE (id int identity(1,1), cmd nvarchar(max));
 INSERT INTO @T
 				SELECT 

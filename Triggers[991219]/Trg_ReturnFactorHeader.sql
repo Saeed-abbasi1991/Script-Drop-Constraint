@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 			    BEGIN TRY
-				INSERT INTO SadganLog.SAL.ReturnFactorHeader
+				INSERT INTO sadganbase.SAL.ReturnFactorHeader
 							([ID]
       ,[RefFiscalYearID]
       ,[RefVoucherHeaderID]
@@ -128,7 +128,7 @@ BEGIN
 		ELSE
 			BEGIN
 			    BEGIN TRY
-				INSERT INTO SadganLog.SAL.ReturnFactorHeader
+				INSERT INTO sadganbase.SAL.ReturnFactorHeader
 							([ID]
       ,[RefFiscalYearID]
       ,[RefVoucherHeaderID]

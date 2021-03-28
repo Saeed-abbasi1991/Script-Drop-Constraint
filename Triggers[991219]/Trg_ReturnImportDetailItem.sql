@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 				BEGIN TRY
-					INSERT INTO SadganLog.STO.ReturnImportDetailItem
+					INSERT INTO sadganbase.STO.ReturnImportDetailItem
 								 ([ID]
       ,[RefReturnImportHeaderID]
       ,[RowNo]
@@ -138,7 +138,7 @@ BEGIN
 		ELSE
 			BEGIN
 				BEGIN TRY
-					INSERT INTO SadganLog.STO.ReturnImportDetailItem
+					INSERT INTO sadganbase.STO.ReturnImportDetailItem
 							 ([ID]
       ,[RefReturnImportHeaderID]
       ,[RowNo]

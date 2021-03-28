@@ -1,7 +1,7 @@
 --This Scripts Set Identity Property Columns To No For All Tables
 --Note:For Disable Identity From Yes To No This Command Not Effect On Table:AlTER TABLE MYTABLE SET IDENTITY OFF
 --You Most Delete Column AND Create Again
-USE sadganBase
+USE sadganbase
 DECLARE @Commands TABLE(Id BIGINT IDENTITY(1,1),Command Varchar(max))
 
 DECLARE @Cmd1 nvarchar(max)
@@ -23,7 +23,7 @@ DECLARE @Cmd6 nvarchar(max)
 							+' DROP COLUMN '+cols.name  +char(13) as s3
 											
 							, 'ALTER TABLE '+OBJECT_SCHEMA_NAME(sys.objects.object_id)+'.'+tbls.name
-							+' ADD '+cols.name+' '+sys.types.name++' NULL '+char(13)as s4
+							+' ADD '+cols.name+' '+sys.types.name+' NULL '+char(13)as s4
 											
 							, 'UPDATE '+OBJECT_SCHEMA_NAME(sys.objects.object_id)+'.'+tbls.name+' SET '+cols.name+'='
 							+'tmpcolumn'+cols.name+char(13)as s5

@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 				BEGIN TRY
-					INSERT INTO SadganLog.STO.ReturnExportHeader
+					INSERT INTO sadganbase.STO.ReturnExportHeader
 						    ([ID]
       ,[RefFiscalYearID]
       ,[RefVoucherTypeID]
@@ -99,7 +99,7 @@ BEGIN
 		ELSE
 			BEGIN
 				BEGIN TRY
-					INSERT INTO SadganLog.STO.ReturnExportHeader
+					INSERT INTO sadganbase.STO.ReturnExportHeader
 							  ([ID]
       ,[RefFiscalYearID]
       ,[RefVoucherTypeID]

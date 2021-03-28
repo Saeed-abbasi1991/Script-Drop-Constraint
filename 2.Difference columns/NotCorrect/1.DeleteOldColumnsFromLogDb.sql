@@ -1,4 +1,9 @@
 
+DECLARE @MainDb_Id Smallint= db_id('sadganPaloodDev')
+
+DECLARE @LogDb_Id Smallint= db_id('sadganlog')
+
+
 DECLARE @DbLogName nvarchar(max)='sadganlog'
 -----------------------------------------------------------
 DECLARE @LogDate Varchar(20)='LogDate'
@@ -27,12 +32,13 @@ DECLARE @Log_nt_username_Type varchar(20)='ndtLongString'
 ----------------------------------------------------------------------------
 DECLARE @Log_ClientAddress varchar(20)='Log_ClientAddress'
 DECLARE @Log_ClientAddress_Type varchar(20)='ndtLongString'
-DECLARE @Commnads TABLE(Id bigint Identity(1,1),Columnname nvarchar(max), SchemaName nvarchar(max),TableName nvarchar(max),Command nvarchar(max))
+DECLARE @Commnads TABLE(Id bigint Identity(1,1),Columnname nvarchar(max), SchemaName nvarchar(max),LogDbTable nvarchar(max),MainDbTable nvarchar(max), Command nvarchar(max))
 INSERT INTO @Commnads
 select 
         LOGDB.colname,
 		LOGDB.schemaname,
 		LOGDB.tblname,
+		MainDb.tblname,
 		'ALTER TABLE '+@DbLogName+'.'+LOGDB.schemaname+'.'+LOGDB.tblname+' DROP COLUMN '+LOGDB.colname
 		FROM
               
@@ -40,9 +46,9 @@ select
 				(SELECT 
 				       cols.name colname
 					   ,cols.object_id objectid
-					   ,OBJECT_NAME(cols.object_id) as tblname
+					   ,OBJECT_NAME(cols.object_id,@LogDb_Id) as tblname
 					   ,dtype.name typename
-					   ,OBJECT_SCHEMA_NAME(cols.object_id)schemaname
+					   ,OBJECT_SCHEMA_NAME(cols.object_id,@LogDb_Id)schemaname
 				 FROM 
 				       sadganlog.sys.columns cols
 				 JOIN
@@ -58,9 +64,9 @@ select
 				(SELECT 
 				     cols.name colname
 					 ,cols.object_id objectid
-					 ,OBJECT_NAME(cols.object_id) as tblname
+					 ,OBJECT_NAME(cols.object_id,@MainDb_Id) as tblname
 					 ,dtype.name typename
-					 ,OBJECT_SCHEMA_NAME(cols.object_id)schemaname 
+					 ,OBJECT_SCHEMA_NAME(cols.object_id,@MainDb_Id)schemaname 
 			   FROM 
 					 sadganPaloodDev.sys.columns cols
 			   JOIN
@@ -75,7 +81,8 @@ select
 		where 
 					MainDB.objectid is null 
 
-SELECT * FROM @Commnads						
+SELECT * FROM @Commnads	
+--WHERE MainDbTable IS NOT NULL				
 DECLARE @Id bigint=(SELECT TOP 1 Id FROM @Commnads)
 
 WHILE @Id IS NOT NULL

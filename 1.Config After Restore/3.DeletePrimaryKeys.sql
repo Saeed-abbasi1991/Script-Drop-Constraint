@@ -1,5 +1,5 @@
 --This Scripts Delete All PrimaryKeys
-USE sadganBase
+USE sadganbase
 DECLARE @Commands TABLE(Id bigint identity(1,1),Command varchar(max));
 
 Insert Into @Commands 

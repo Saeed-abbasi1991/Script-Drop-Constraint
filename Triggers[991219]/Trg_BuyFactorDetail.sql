@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 				BEGIN TRY
-				 INSERT INTO SadganLog.ACC.BuyFactorDetail
+				 INSERT INTO sadganbase.ACC.BuyFactorDetail
 							([ID]
       ,[RefBuyFactorHeaderID]
       ,[RowNo]
@@ -128,7 +128,7 @@ BEGIN
 		ELSE
 			BEGIN
 			   BEGIN TRY
-				INSERT INTO SadganLog.ACC.BuyFactorDetail
+				INSERT INTO sadganbase.ACC.BuyFactorDetail
 							([ID]
       ,[RefBuyFactorHeaderID]
       ,[RowNo]

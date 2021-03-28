@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 			    BEGIN TRY
-				     INSERT INTO SadganLog.ACC.VoucherHeader
+				     INSERT INTO sadganbase.ACC.VoucherHeader
 							([ID]
 							,[FiscalYearID]
 							,[VoucherKindID]
@@ -96,7 +96,7 @@ BEGIN
 		ELSE
 			BEGIN
 			  BEGIN TRY
-				INSERT INTO SadganLog.ACC.VoucherHeader
+				INSERT INTO sadganbase.ACC.VoucherHeader
 							([ID]
 							,[FiscalYearID]
 							,[VoucherKindID]

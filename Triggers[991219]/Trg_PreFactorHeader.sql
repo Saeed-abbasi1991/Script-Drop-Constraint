@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 				BEGIN TRY
-				  INSERT INTO SadganLog.SAL.PreFactorHeader
+				  INSERT INTO sadganbase.SAL.PreFactorHeader
 							([ID]
       ,[RefFiscalYearID]
       ,[PreFactorNo]
@@ -128,7 +128,7 @@ BEGIN
 		ELSE
 			BEGIN
 			BEGIN TRY
-				INSERT INTO SadganLog.SAL.PreFactorHeader
+				INSERT INTO sadganbase.SAL.PreFactorHeader
 							([ID]
       ,[RefFiscalYearID]
       ,[PreFactorNo]

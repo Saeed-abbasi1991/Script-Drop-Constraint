@@ -27,7 +27,7 @@ BEGIN
 		if @Act=0 or @Act=1
 			BEGIN
 			    BEGIN TRY
-				 INSERT INTO SadganLog.ACC.BuyFactorHeader
+				 INSERT INTO sadganbase.ACC.BuyFactorHeader
 							([ID]
       ,[RefVoucherTypeID]
       ,[RefVoucherHeaderID]
@@ -118,7 +118,7 @@ BEGIN
 		ELSE
 		BEGIN
 		       BEGIN TRY
-			        INSERT INTO SadganLog.ACC.BuyFactorHeader
+			        INSERT INTO sadganbase.ACC.BuyFactorHeader
 						([ID]
       ,[RefVoucherTypeID]
       ,[RefVoucherHeaderID]

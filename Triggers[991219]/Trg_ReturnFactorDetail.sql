@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 				BEGIN TRY
-				INSERT INTO SadganLog.SAL.ReturnFactorDetail
+				INSERT INTO sadganbase.SAL.ReturnFactorDetail
 							([ID]
       ,[RefReturnFactorHeaderID]
       ,[RefFactorDetailID]
@@ -117,7 +117,7 @@ BEGIN
 		ELSE
 			BEGIN
 				BEGIN TRY
-				INSERT INTO SadganLog.SAL.ReturnFactorDetail
+				INSERT INTO sadganbase.SAL.ReturnFactorDetail
 							([ID]
       ,[RefReturnFactorHeaderID]
       ,[RefFactorDetailID]

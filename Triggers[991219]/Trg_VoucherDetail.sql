@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 			BEGIN TRY
-				INSERT INTO SadganLog.ACC.VoucherDetail
+				INSERT INTO sadganbase.ACC.VoucherDetail
 							([ID]
 							,[VoucherHeaderID]
 							,[RowNo]
@@ -85,7 +85,7 @@ BEGIN
 		ELSE
 			BEGIN
 			BEGIN TRY
-				INSERT INTO SadganLog.ACC.VoucherDetail
+				INSERT INTO sadganbase.ACC.VoucherDetail
 							([ID]
 							,[VoucherHeaderID]
 							,[RowNo]

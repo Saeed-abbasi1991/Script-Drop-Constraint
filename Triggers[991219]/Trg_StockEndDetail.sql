@@ -27,7 +27,7 @@ BEGIN
 		IF @Act=0 or @Act=1
 			BEGIN
 			    BEGIN TRY
-					INSERT INTO SadganLog.STO.StockEndDetail
+					INSERT INTO sadganbase.STO.StockEndDetail
 						    ([ID]
       ,[RefStockEndHeaderID]
       ,[RowNo]
@@ -106,7 +106,7 @@ BEGIN
 		ELSE
 			BEGIN
 			BEGIN TRy
-				 INSERT INTO SadganLog.STO.StockEndDetail
+				 INSERT INTO sadganbase.STO.StockEndDetail
 							([ID]
       ,[RefStockEndHeaderID]
       ,[RowNo]
